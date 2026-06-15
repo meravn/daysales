@@ -1,4 +1,4 @@
-const BASE = '/api';
+const BASE = window.location.pathname.startsWith('/_/') ? '/_/backend/api' : '/api';
 
 async function request(method, path, body, isFormData) {
   const opts = {

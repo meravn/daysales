@@ -1,0 +1,6 @@
+node_modules/
+backend/sales.db
+backend/*.db
+frontend/dist/
+.env
+*.log
