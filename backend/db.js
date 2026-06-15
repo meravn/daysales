@@ -7,7 +7,9 @@ const DB_PATH = path.join(__dirname, 'sales.db');
 let db = null;
 
 async function init() {
-  const SQL = await initSqlJs();
+  const SQL = await initSqlJs({
+    locateFile: file => path.join(__dirname, 'node_modules/sql.js/dist/', file)
+  });
 
   if (fs.existsSync(DB_PATH)) {
     db = new SQL.Database(fs.readFileSync(DB_PATH));
