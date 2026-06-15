@@ -54,6 +54,19 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 init().then(() => {
+  // Auto-seed users on first run
+  const seedPath = path.join(__dirname, 'seed_users.json');
+  if (fs.existsSync(seedPath)) {
+    const existing = require('./db').prepare('SELECT COUNT(*) as c FROM users').get();
+    if (existing.c === 0) {
+      const users = JSON.parse(fs.readFileSync(seedPath, 'utf8'));
+      const insert = require('./db').prepare(
+        'INSERT OR IGNORE INTO users (name, mobile, email, id_number, district, role) VALUES (?,?,?,?,?,?)'
+      );
+      users.forEach(u => insert.run(u.name, u.mobile, '', '', u.district, u.role));
+      console.log(`Seeded ${users.length} users`);
+    }
+  }
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }).catch(err => {
   console.error('DB init failed:', err);
